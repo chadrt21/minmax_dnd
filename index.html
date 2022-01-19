@@ -17,23 +17,57 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 <!--       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto"> 
+        <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
             <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li>  
+          </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Get Started</a>
-          </li> 
+          </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Community</a>
-          </li>     
-        </ul>                   
-        <a class="btn btn-success my-2 my-sm-0" href="#"><i class="fa fa-sign-in"></i> Login</a>                   
+          </li>
+        </ul>
+        <a class="btn btn-success my-2 my-sm-0" href="#"><i class="fa fa-sign-in"></i> Login</a>
       </div> -->
     </div>
     </nav>
- 
- <table>
+
+    <div id="container"></div>
+    <script>
+    var header = ["Level", "Class", "Features", "HP", "AC", "STR","DEX","CON","INT","WIS","CHA","Spells","Cantrips","Max spell"];
+    var classes = ["","Aritifcer","Barbarian","Bard","Cleric","Druid","Fighter","Monk","Paladin","Ranger","Rouge","Sorcerer","Warlock","Wizard"]
+    var levels = [...Array(20).keys()].map(x => ++x);
+
+    // (C) CREATE HTML TABLE
+    // (C1) HTML TABLE STRING
+    var myTable = "<table><tr>";
+
+    // (C2) LOOP THROUGH ARRAY & GENERATE ROWS-CELLS
+    header.forEach(value => (myTable += `<td>${value}</td>`));
+
+    myTable += "</tr><tr>";
+
+    levels.forEach((value,i) => {
+      myTable += `<td>${value}</td>`;
+      myTable += "<td><select name=\"class\" id=\"class\">";
+      classes.forEach(c => myTable += `<option value="${c}">${c}</option>`);
+      myTable += "</select></td>";
+
+      // BREAK INTO NEXT ROW
+      var next = i + 1;
+      if (next!=levels.length) { myTable += "</tr><tr>"; }
+    });
+
+
+    // (C3) CLOSE THE TABLE STRING
+    myTable += "</tr></table>";
+
+    // (D) ATTACH HTML TO CONTAINER
+    document.getElementById("container").innerHTML = myTable;
+    </script>
+
+ <!-- <table>
   <tr>
     <td>Level</td>
     <td>Class</td>
@@ -65,7 +99,7 @@
   	</select>
   	</td>
   </tr>
-</table>
+</table> -->
 
 
 </body>
