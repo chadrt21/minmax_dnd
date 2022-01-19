@@ -39,13 +39,16 @@
     }
     </script>
 
-    <label>Race: </label>
 <div id="con"></div>
     <script>
-    var races = ["","Human","Elf","Gnome"];
-    var raceSelect = `<select name="race" onchange="updateTable(this.value)">`;
+    var races = ["","Dragonborn","Dwarf","Human","Elf","Half-Elf","Halfling","Half-Orc","Tiefling","Leonin","Satyr","Fiary",
+    "Haengon","Owlin","Aarakocra","Genasi","Goliath","Gnome","Aasimar","Bugbear","Firblog","Goblin","Hobgoblin","Kenku","Kobold",
+    "Lizardfolk","Orc","Tabaxi","Triton","Yuan-ti Pureblood","Feral Tiefling","Tortle","Changeling","Kalashtar","Shifter","Warforged",
+    "Gith","Centaur","Loxodon","Minotaur","Simic Hybrid","Vedalken","Verdan","Locathah","Grung"].sort();
+    var raceSelect = `<label>Race: </label><select name="race" id="race" onchange="updateTable(this.value)">`;
     races.forEach((item, i) => raceSelect += `<option value="${item}">${item}</option>`);
     raceSelect += `</select>`;
+    raceSelect += "<label> Equipment: </label>";
     document.getElementById("con").innerHTML = raceSelect;
     </script>
 
@@ -60,12 +63,20 @@
     var myTable = "<table><tr>";
 
     // (C2) LOOP THROUGH ARRAY & GENERATE ROWS-CELLS
-    header.forEach(value => (myTable += `<td>${value}</td>`));
+    header.forEach((value,i) => {
+      if (i <= 2) {
+        myTable += `<td>${value}</td>`;
+      }
+      else {
+        myTable += `<td style="text-align: center; vertical-align: middle;">${value}</td>`;
+      }
+
+    });
 
     myTable += "</tr><tr>";
 
     levels.forEach((value,i) => {
-      myTable += `<td>${value}</td>`;
+      myTable += `<td style="text-align: center; vertical-align: middle;">${value}</td>`;
       myTable += `<td><select name="class" id="class${value}" onchange="updateTable(this.value)">`;
       classes.forEach(c => myTable += `<option value="${c}">${c}</option>`);
       // CLICK ON CELL TO DO SOMETHING
@@ -76,11 +87,13 @@
       myTable += "</select></td>";
 
       if (i === 0) {
-        myTable += "</td><td>";
-        [...Array(8).keys()].forEach(n => myTable += `</td><th><div><input type="number" id="stat${value}_${n}" size="3"></div></th></td>`);
+        myTable += `</td><td style="min-width:100px"></td><td></td><td>`;
+        [...Array(6).keys()].forEach(n => myTable += `</td><th><div><input type="number" id="stat${value}_${n}" value="10" style="max-width:30px"></div></th></td>`);
       }
       else {
-        [...Array(9).keys()].forEach(n => myTable += "</td><td>");
+        myTable += "</td><td>";
+        [...Array(8).keys()].forEach(n => myTable += `</td><th><div><output for="stat${value}_${n}" style="max-width:30px"></output></div></th></td>`);
+        // [...Array(9).keys()].forEach(n => myTable += "</td><td>");
       }
 
       // BREAK INTO NEXT ROW
@@ -95,40 +108,6 @@
     // (D) ATTACH HTML TO CONTAINER
     document.getElementById("container").innerHTML = myTable;
     </script>
-
- <!-- <table>
-  <tr>
-    <td>Level</td>
-    <td>Class</td>
-    <td>Feature/ASI</td>
-  </tr>
-  <tr>
-    <td>1</td>
-    <td>
-    <select name="class" id="class">
-    	<option value="Default">Choose Class</option>
-    	<option value="Artificer">Artificer</option>
-    	<option value="Barbarian">Barbarian</option>
-    	<option value="Bard">Bard</option>
-    	<option value="Cleric">Cleric</option>
-        <option value="Druid">Druid</option>
-  	</select>
-  	</td>
-  </tr>
-  <tr>
-    <td>2</td>
-    <td>
-    <select name="class" id="class">
-    	<option value="Default">Choose Class</option>
-    	<option value="Artificer">Artificer</option>
-    	<option value="Barbarian">Barbarian</option>
-    	<option value="Bard">Bard</option>
-    	<option value="Cleric">Cleric</option>
-        <option value="Druid">Druid</option>
-  	</select>
-  	</td>
-  </tr>
-</table> -->
 
 
 </body>
