@@ -33,10 +33,26 @@
     </div>
     </nav>
 
+    <script>
+    funciton updateTable(level) {
+
+    }
+    </script>
+
+    <label>Race: </label>
+<div id="con"></div>
+    <script>
+    var races = ["","Human","Elf","Gnome"];
+    var raceSelect = `<select name="race" onchange="updateTable(this.value)">`;
+    races.forEach((item, i) => raceSelect += `<option value="${item}">${item}</option>`);
+    raceSelect += `</select>`;
+    document.getElementById("con").innerHTML = raceSelect;
+    </script>
+
     <div id="container"></div>
     <script>
     var header = ["Level", "Class", "Features", "HP", "AC", "STR","DEX","CON","INT","WIS","CHA","Spells","Cantrips","Max spell"];
-    var classes = ["","Aritifcer","Barbarian","Bard","Cleric","Druid","Fighter","Monk","Paladin","Ranger","Rouge","Sorcerer","Warlock","Wizard"]
+    var classes = ["","Aritifcer","Barbarian","Bard","Cleric","Druid","Fighter","Monk","Paladin","Ranger","Rouge","Sorcerer","Warlock","Wizard"];
     var levels = [...Array(20).keys()].map(x => ++x);
 
     // (C) CREATE HTML TABLE
@@ -50,9 +66,22 @@
 
     levels.forEach((value,i) => {
       myTable += `<td>${value}</td>`;
-      myTable += "<td><select name=\"class\" id=\"class\">";
+      myTable += `<td><select name="class" id="class${value}" onchange="updateTable(this.value)">`;
       classes.forEach(c => myTable += `<option value="${c}">${c}</option>`);
+      // CLICK ON CELL TO DO SOMETHING
+      // myTable += `<td onclick="FUNCTION()">${value}</td>`;
+
+      // TO PASS IN A RUNNING NUMBER OR PARAMETER
+      // myTable += `<td onclick="FUNCTION(${i})">${value}</td>`;
       myTable += "</select></td>";
+
+      if (i === 0) {
+        myTable += "</td><td>";
+        [...Array(8).keys()].forEach(n => myTable += `</td><th><div><input type="number" id="stat${value}_${n}" size="3"></div></th></td>`);
+      }
+      else {
+        [...Array(9).keys()].forEach(n => myTable += "</td><td>");
+      }
 
       // BREAK INTO NEXT ROW
       var next = i + 1;
