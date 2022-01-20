@@ -6,7 +6,9 @@
     <meta name="description" content="">
     <meta name="author" content="Chad Ross">
     <title>MinMax DnD Muiltclass</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.35.1/handsontable.min.css" rel="stylesheet">
   </head>
   <body style="padding-top: 5rem;">
@@ -33,36 +35,63 @@
     </div>
     </nav>
 
-    <script>
+    <!-- <script>
     funciton updateTable(level) {
 
     }
-    </script>
+
+    </script> -->
 
 <div id="con"></div>
     <script>
-    var races = ["","Dragonborn","Dwarf","Human","Elf","Half-Elf","Halfling","Half-Orc","Tiefling","Leonin","Satyr","Fiary",
+    const races = ["","Dragonborn","Dwarf","Human","Elf","Half-Elf","Halfling","Half-Orc","Tiefling","Leonin","Satyr","Fiary",
     "Haengon","Owlin","Aarakocra","Genasi","Goliath","Gnome","Aasimar","Bugbear","Firblog","Goblin","Hobgoblin","Kenku","Kobold",
     "Lizardfolk","Orc","Tabaxi","Triton","Yuan-ti Pureblood","Feral Tiefling","Tortle","Changeling","Kalashtar","Shifter","Warforged",
     "Gith","Centaur","Loxodon","Minotaur","Simic Hybrid","Vedalken","Verdan","Locathah","Grung"].sort();
-    var raceSelect = `<label>Race: </label><select name="race" id="race" onchange="updateTable(this.value)">`;
-    races.forEach((item, i) => raceSelect += `<option value="${item}">${item}</option>`);
-    raceSelect += `</select>`;
-    raceSelect += "<label> Equipment: </label>";
-    document.getElementById("con").innerHTML = raceSelect;
+    const armor = ["","Breastplate","Chain Mail","Half Plate","Hide","Plate","Leather"].sort();
+    const shield = ["","+2"].sort();
+    var startSelect = `<label>Race: </label><select name="race" id="race" onchange="updateTable(this.value)">`;
+    races.forEach((item, i) => startSelect += `<option value="${item}">${item}</option>`);
+    startSelect += `</select>`;
+    startSelect += "<strong> Equipment: </strong>";
+    startSelect += `<label> Armor: </label><select name="armor" id="armor" onchange="updateTable(this.value)">`;
+    armor.forEach((item, i) => startSelect += `<option value="${item}">${item}</option>`);
+    startSelect += `</select>`;
+    startSelect += `<label> Shield: </label><select name="shield" id="shield" onchange="updateTable(this.value)">`;
+    shield.forEach((item, i) => startSelect += `<option value="${item}">${item}</option>`);
+    startSelect += `</select>`;
+    document.getElementById("con").innerHTML = startSelect;
     </script>
 
     <div id="container"></div>
     <script>
-    var header = ["Level", "Class", "Features", "HP", "AC", "STR","DEX","CON","INT","WIS","CHA","Spells","Cantrips","Max spell"];
-    var classes = ["","Aritifcer","Barbarian","Bard","Cleric","Druid","Fighter","Monk","Paladin","Ranger","Rouge","Sorcerer","Warlock","Wizard"];
-    var levels = [...Array(20).keys()].map(x => ++x);
+    const header = ["Level", "Class", "Features", "HP", "AC", "STR","DEX","CON","INT","WIS","CHA","Proficency Bonus","# of Spells","# of Cantrips","Max Spell Level","1st","2nd","3rd","4th","5th","6th","7th","8th","9th"];
+    const classes = ["","Aritifcer","Barbarian","Bard","Cleric","Druid","Fighter","Monk","Paladin","Ranger","Rouge","Sorcerer","Warlock","Wizard"];
+    const levels = [...Array(20).keys()].map(x => ++x);
 
     // (C) CREATE HTML TABLE
-    // (C1) HTML TABLE STRING
     var myTable = "<table><tr>";
 
-    // (C2) LOOP THROUGH ARRAY & GENERATE ROWS-CELLS
+    [...Array(5).keys()].forEach(n => myTable +=`</td><td>`);
+    [...Array(6).keys()].forEach(n => {
+      myTable += `</td><th><div><input type="number" id="stat${n}" value="10" min="1" max="30" style="max-width:30px" onchange="updateAbilities(abilityScores)"></div></th></td>`;
+    });
+
+    var abilityScores = Array(levels.length).fill(10).map(x => [10,8,14,15,10,16]);
+
+    // updateAbilities();
+    // var abilityScores = Array(levels.length).fill(10).map(x => Array(6).fill(12));
+    function updateAbilities(abilityScores) {
+      abilityScores = Array(levels.length).fill(10).map(x => [...Array(6).keys()].forEach(n => document.getElementById(`stat${n}`).value));
+      // var abilityScores = Array(levels.length).fill(10).map(x => [10,8,14,15,10,16]);
+      console.log(abilityScores);
+    }
+    var hp = Array(levels.length).fill(10);
+    var ac = Array(levels.length).fill(10);
+    var prof = [2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6];
+
+    myTable += "</tr><tr>";
+
     header.forEach((value,i) => {
       if (i <= 2) {
         myTable += `<td>${value}</td>`;
@@ -76,7 +105,9 @@
     myTable += "</tr><tr>";
 
     levels.forEach((value,i) => {
+      // Level
       myTable += `<td style="text-align: center; vertical-align: middle;">${value}</td>`;
+      // Class at Level
       myTable += `<td><select name="class" id="class${value}" onchange="updateTable(this.value)">`;
       classes.forEach(c => myTable += `<option value="${c}">${c}</option>`);
       // CLICK ON CELL TO DO SOMETHING
@@ -86,15 +117,29 @@
       // myTable += `<td onclick="FUNCTION(${i})">${value}</td>`;
       myTable += "</select></td>";
 
-      if (i === 0) {
-        myTable += `</td><td style="min-width:100px"></td><td></td><td>`;
-        [...Array(6).keys()].forEach(n => myTable += `</td><th><div><input type="number" id="stat${value}_${n}" value="10" style="max-width:30px"></div></th></td>`);
-      }
-      else {
-        myTable += "</td><td>";
-        [...Array(8).keys()].forEach(n => myTable += `</td><th><div><output for="stat${value}_${n}" style="max-width:30px"></output></div></th></td>`);
+        // if (i === 0) {
+        //   myTable += `</td><td style="min-width:100px"></td><td></td><td>`;
+        //   [...Array(6).keys()].forEach(n => myTable += `</td><th><div><input type="number" id="stat${value}_${n}" value="10" style="max-width:30px"></div></th></td>`);
+        // }
+        // else {
+      // Features at Class Level
+      myTable += `</td><td  style="min-width:200px">`;
+        // [...Array(8).keys()].forEach(n => myTable += `</td><th><div><output for="stat${value}_${n}" style="max-width:30px"></output></div></th></td>`);
+      const getScoreMod = (score) => {
+        var mod = Math.floor((score - 10)/2);
+        return (score >= 10) ? `+${mod}` : `${mod}`;
+      };
+      // HP:
+      myTable += `</td><th><div>${hp[i]}</div></th></td>`;
+      // AC: 10 + DEX + armor + shield
+      myTable += `</td><th><div>${ac[i] + Math.floor((abilityScores[i][1] - 10)/2)}</div></th></td>`;
+      // Ability Scores
+      abilityScores[i].forEach((n,m) => myTable += `</td><th><div>${n}<br />(${getScoreMod(abilityScores[i][m])})</div></th></td>`);
+      // [...Array(6).keys()].forEach(n => myTable += `</td><th><div>10<br />(${getScoreMod(10)})</div></th></td>`);
         // [...Array(9).keys()].forEach(n => myTable += "</td><td>");
-      }
+      // }
+      //Proficency Bonus
+      myTable += `</td><th><div>+${prof[i]}</div></th></td>`;
 
       // BREAK INTO NEXT ROW
       var next = i + 1;
@@ -102,7 +147,7 @@
     });
 
 
-    // (C3) CLOSE THE TABLE STRING
+    // CLOSE THE TABLE STRING
     myTable += "</tr></table>";
 
     // (D) ATTACH HTML TO CONTAINER
