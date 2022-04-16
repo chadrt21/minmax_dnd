@@ -1,0 +1,109 @@
+{
+  "Player's Handbook": [
+    {
+      "Dragonborn":  ["+2 STR","+1 CHA"]
+    },
+    "Dwarf",
+    "Elf",
+    {"Gnome":
+    [
+      "Deep Gnome",
+      "Forest Gnome",
+      "Mark of Scribing Gnome",
+      "Rock Gnome"
+    ]},
+    "Half-Elf",
+    "Halfling",
+    "Half-Orc",
+    "Human",
+    "Tiefling"
+  ],
+  "Explorer's Guide to Wildemount": [
+    "Orc of Exandria",
+    {
+      "Draconblood Dragonborn": ["+2 INT","+1 CHA"]
+    },
+    {
+      "Ravenite Dragonborn": ["+2 STR","+1 CON"]
+    }
+  ],
+  "Mythic Odysseys of Theros": [
+    "Leonin",
+    "Satyr"
+  ],
+  "Van Richten's Guide to Ravenloft": [
+    "Lineages"
+  ],
+  "The Wild Beyond the Witchlight": [
+    "Fairy",
+    "Harengon"
+  ],
+  "Strixhaven: A Curriculum of Chaos": [
+    "Owlin"
+  ],
+  "Elemental Evil Player's Companion": [
+    "Aarkocra",
+    "Genasi",
+    "Goliath"
+  ],
+  "Volo's Guide to Monsters": [
+    "Aasimar",
+    "Bugbear",
+    "Firblog",
+    "Goblin",
+    "Hobgoblin",
+    "Kenku",
+    "Kobold",
+    "Lizardfolk",
+    "Orc",
+    "Tabaxi",
+    "Triton",
+    "Yuan-ti Pureblood"
+  ],
+  "Sword Coast Adventurer's Guide": [
+    "Feral Tiefling"
+  ],
+  "The Tortle Package": [
+    "Tortle"
+  ],
+  "Eberron: Rising from the Last War": [
+    "Changeling",
+    "Kalashtar",
+    "Orc of Eberron",
+    "Shifter",
+    "Warforged"
+  ],
+  "Mordenkainen's Tome of Foes": [
+    "Gith"
+  ],
+  "Guildmasters' Guide to Ravnica": [
+    "Centaur",
+    "Loxodon",
+    "Minotaur",
+    "Simic Hybrid",
+    "Vedalken"
+  ],
+  "Acquisitions Incorporated": [
+    "Verdan"
+  ],
+  "Locathah Rising": [
+    "Locathah"
+  ],
+  "One Grung Above": [
+    "Grung"
+  ],
+  "Fizban's Treasury of Dragons": [
+    {"Chromatic Dragonborn": [
+      ["+2 ANY","+1 ANY"],
+      ["+1 ANY","+1 ANY","+1 ANY"]
+    ]},
+    {"Gem Dragonborn": [
+      ["+2 ANY","+1 ANY"],
+      ["+1 ANY","+1 ANY","+1 ANY"]
+    ]},
+    {"Metallic Dragonborn": [
+      ["+2 ANY","+1 ANY"],
+      ["+1 ANY","+1 ANY","+1 ANY"]
+    ]}
+  ]
+}
