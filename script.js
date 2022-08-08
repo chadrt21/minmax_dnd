@@ -46,6 +46,11 @@ let classTracked = {
       //  Returns an object array of classes with sum number of classes each
       return classOptions.slice(1).reduce((ac,a) => (ac[a] = this[a].reduce((total, i) => i + total), ac),{})
     },
+    currentLevel(classType,level) {
+        console.log('currentLevel',classType.value ?? classType,level)
+        return level <= 1 ? 1 : [...Array(level).keys()].reduce((total,i) => this[classType.value ?? classType][i] + total,0)
+      // return classOptions.slice(1).reduce((ac,a) => (ac[a] = this[a][level-1] === 1, ac),{})[classType.value]
+    },
     toString() {
         let str = ""
         const arr = this.sumClasses()
@@ -63,26 +68,67 @@ let classTracked = {
 
 function classStart(classSelected,hitDice,armor,weapons,etc) {
     return `As a ${classSelected} you gain the following features:<br/>
-                <ul>
-                    <li><b>Hit Dice: ${hitDice}</b></li>
-                    <li><b>Proficiences</b></li>
-                    <ul>
-                        <li>Armor: ${armor}</li>
-                        <li>Weapons: ${weapons}</li>
-                    </ul>
-                </ul>
+                    <b>Hit Dice:</b> ${hitDice}<br/>
+                    <b>Proficiences</b><br/>
+                        &emsp; <b>Armor:</b> ${armor}<br/>
+                        &emsp; <b>Weapons:</b> ${weapons}<br/>
                 `.concat(etc.join(`<br/>`))
+}
+function asiSelect(selected,level) {
+    console.log('asiSelected',selected,level)
+    let options = document.getElementById(`asiChoice-${level}`)
+    if(selected === "Feat") {
+        let featsList = ['Aberrant Dragonmark', 'Actor', 'Alert', 'Artificer Initiate']
+        options.innerHTML = `<input type="text" list="featsList${level}" id="feats${level}">
+            <datalist id="featsList${level}">
+<!--                <option value="Aberrant Dragonmark"></option>-->
+<!--                <option value="Actor"></option>-->
+            </datalist>`
+        let list = document.getElementById(`featsList${level}`)
+        featsList.forEach(i => {
+            let opt = document.createElement('option')
+            opt.value = i
+            opt.innerHTML = i
+            list.appendChild(opt)
+        })
+    }
+    if (selected === "Ability")
+    {
+        let abilities = ['Charisma','Constitution','Dexterity','Intelligence','Strength','Wisdom']
+        options.innerHTML = `<select id="ability${level}-1">
+        <option>- Choose an Ability Score -</option>
+        </select><br/><br/>
+        <select id="ability${level}-2">
+        <option>- Choose an Ability Score -</option>
+        </select>`
+        let list1 = document.getElementById(`ability${level}-1`)
+        let list2 = document.getElementById(`ability${level}-2`)
+        abilities.forEach(i => {
+            let opt = document.createElement('option')
+            opt.value = i
+            opt.innerHTML = `${i} Score`
+            list1.appendChild(opt)
+        })
+        abilities.forEach(i => {
+            let opt = document.createElement('option')
+            opt.value = i
+            opt.innerHTML = `${i} Score`
+            list2.appendChild(opt)
+        })
+
+    }
 }
 
 function asi(level) {
     // TODO add feats list
     // TODO add ability score integration
     return `Ability Score Improvement: 
-            <select name="asi-${level}">
-                <option></option>
+            <select name="asi-${level}" onchange="asiSelect(this.value,${level})">
+                <option>- Choose an option -</option>
                 <option value="Feat">Feat</option>
-                <option value="Abilty">Ability Score Improvement</option>
+                <option value="Ability">Ability Score Improvement</option>
             </select><br/>
+            <div id="asiChoice-${level}"></div>
             `
 }
 
@@ -177,7 +223,7 @@ function classFeatures(classSelected,level) {
                 case 1: return classStart(classSelected,
                     '1d8',
                     'Light armor',
-                    'simple weapons, hand crossbows, longsword, rapiers, shortswords',
+                    'simple weapons',
                     ['Spellcasting', 'Divine Domain'])
                 case 2: return `Channel Divinity (1/rest), Divine Domain Feature`
                 case 3: return `-`
@@ -204,8 +250,8 @@ function classFeatures(classSelected,level) {
             switch (level) {
                 case 1: return classStart(classSelected,
                     '1d8',
-                    'Light armor',
-                    'simple weapons, hand crossbows, longsword, rapiers, shortswords',
+                    'Light armor and medium armor (nonmetal), shields (nonmetal)',
+                    'clubs, daggers, darts, javelins, maces, quarterstaffs, scimitars, sickels, sling,s spears',
                     ['Drudic','Spellcasting' ])
                 case 2: return `Wild Shape, Druid Circle`
                 case 3: return `-`
@@ -232,8 +278,8 @@ function classFeatures(classSelected,level) {
             switch (level) {
                 case 1: return classStart(classSelected,
                     '1d10',
-                    'Light armor',
-                    'simple weapons, hand crossbows, longsword, rapiers, shortswords',
+                    'All armor, shields',
+                    'simple weapons and martial weapons',
                     ['Fighting Style','Second Wind' ])
                 case 2: return `Action Surge (one use)`
                 case 3: return `Martial Archetype`
@@ -260,8 +306,8 @@ function classFeatures(classSelected,level) {
             switch (level) {
                 case 1: return classStart(classSelected,
                     '1d8',
-                    'Light armor',
-                    'simple weapons, hand crossbows, longsword, rapiers, shortswords',
+                    '',
+                    'Simple weapons, shortswords',
                     ['Unarmored Defense','Martial Arts' ])
                 case 2: return `Ki, Unarmored Movement`
                 case 3: return `Monastic Tradition, Deflect Missiles`
@@ -287,9 +333,9 @@ function classFeatures(classSelected,level) {
         case "Paladin":
             switch (level) {
                 case 1: return classStart(classSelected,
-                    '1d8',
-                    'Light armor',
-                    'simple weapons, hand crossbows, longsword, rapiers, shortswords',
+                    '1d10',
+                    'All armor, shields',
+                    'simple and martial weapons',
                     ['Divine Sense','Lay on Hands' ])
                 case 2: return `Fighting Style, Spellcasting, Divine Smite`
                 case 3: return `Divine Health, Sacred Oath`
@@ -314,7 +360,11 @@ function classFeatures(classSelected,level) {
             break
         case "Ranger":
             switch (level) {
-                case 1: return `As a ${classSelected} you gain the following features: Favored Enemy, Natural Explorer`
+                case 1: return classStart(classSelected,
+                    '1d10',
+                    'Light and medium armor, shields',
+                    'simple and martial weapons',
+                    ['Favored Enemy','Natural Explorer' ])
                 case 2: return `Fighting Style, Spellcasting`
                 case 3: return `Ranger Archetype, Primeval Awareness`
                 case 4: return asi(level)
@@ -338,7 +388,11 @@ function classFeatures(classSelected,level) {
             break
         case "Rouge":
             switch (level) {
-                case 1: return `As a ${classSelected} you gain the following features: Expertise, Sneak Attack, Thieves' Cant`
+                case 1: return classStart(classSelected,
+                    '1d8',
+                    'Light armor',
+                    'simple weapons, hand crossbows, longsword, rapiers, shortswords',
+                    ['Expertise','Sneak Attack','Thieve\'s Cant' ])
                 case 2: return `Cunning Action`
                 case 3: return `Roguish Archetype`
                 case 4: return asi(level)
@@ -362,7 +416,11 @@ function classFeatures(classSelected,level) {
             break
         case "Sorcerer":
             switch (level) {
-                case 1: return `As a ${classSelected} you gain the following features: Spellcasting, Sorcerous Origin`
+                case 1: return classStart(classSelected,
+                    '1d6',
+                    '',
+                    'Daggers, darts, slings, quarterstaffs, light crossbows',
+                    ['Sorcerous Origin','Spellcasting' ])
                 case 2: return `Font of Magic`
                 case 3: return `Metamagic`
                 case 4: return asi(level)
@@ -385,7 +443,11 @@ function classFeatures(classSelected,level) {
             }
             break
         case "Warlock": switch (level) {
-            case 1: return `As a ${classSelected} you gain the following features: Otherworldly Patron, Pact Magic`
+            case 1: return classStart(classSelected,
+                '1d8',
+                'Light armor',
+                'simple weapons',
+                ['Otherworldly Patron','Pact Magic' ])
             case 2: return `Eldritch Invocations`
             case 3: return `Pact Boon`
             case 4: return asi(level)
@@ -409,7 +471,11 @@ function classFeatures(classSelected,level) {
             break
         case "Wizard":
             switch (level) {
-                case 1: return `As a ${classSelected} you gain the following features: Spellcasting, Arcane Recovery`
+                case 1: return classStart(classSelected,
+                    '1d6',
+                    '',
+                    'Daggers, darts, slings, quarterstaffs, light crossbows',
+                    ['Spellcasting','Arcane Recovery' ])
                 case 2: return `Arcane Tradition`
                 case 3: return `-`
                 case 4: return asi(level)
@@ -444,6 +510,7 @@ function updateFirstClass(classType, level) {
             document.getElementById(`class${i}`).value = classType.value
             updateFirstClass(classType,i)
         }
+        console.table(classTracked)
     }
     else
         info.innerHTML = classFeatures(classType.value,level)
@@ -457,6 +524,8 @@ function updateClass(classType, level) {
         classOptions.slice(1).filter(item => item !== classType.value)
             .forEach(item => classTracked[`${item}`][level-1] = 0)
         classTracked[`${classType.value}`][level-1] = classTracked[`${classType.value}`][level-1] === 0 ? (classTracked[`${classType.value}`][level-1]+1) || 1 : 0
+        // console.log(classTracked.currentLevel(classType,level))
+        // console.table(classTracked)
         newInfo.innerHTML = classFeatures(classType.value,classTracked.sumClasses()[classType.value])
         newInfo.style.color = 'black'
     }
@@ -466,6 +535,21 @@ function updateClass(classType, level) {
     }
     document.getElementById('buildSummary').innerHTML = classTracked.toString()
     updateHP()
+    updateTable()
+}
+
+function updateTable() {
+    console.table(classTracked)
+    for (let i = 2; i <= 20; i++) {
+        let currentInfo = document.getElementById(`classFeature${i}`)
+        let classId = document.getElementById(`class${i}`)
+        let currentClass = classId.options[classId.selectedIndex].text
+        console.log(i,currentClass)
+        console.log(i,classTracked.currentLevel(currentClass,i),classFeatures(currentClass,
+            classTracked.currentLevel(currentClass,i)))
+        currentInfo.innerHTML = classFeatures(currentClass,
+            classTracked.currentLevel(currentClass,i))
+    }
 }
 
 function checkReq(classType,level) {
@@ -672,7 +756,7 @@ startSelect += `</select></div>`;
 startSelect += `<div class="box" style="background-color:#bbb"><strong> Equipment </strong></div>`;
 // Armor
 startSelect += `<div class="box" style="background-color:#ddd"><label> Armor </label><select name="armor" id="armor" onchange="updateAC()">`;
-startSelect += `<option value=" "></option>`
+startSelect += `<option>--Choose armor--</option>`
 Object.entries(armor).forEach(item => {
     startSelect += `<optgroup label="${item[0]}">`
     item[1].forEach(x => startSelect += `<option value="${x}">${x}</option>`)
@@ -734,7 +818,7 @@ levels.forEach((value,level) => {
     myTable += `<td style="text-align: center; vertical-align: middle;">${value}</td>`;
     // Class at Level
     myTable += level === 0
-        ? `<td><select name="class" id="class${value}" onchange="updateFirstClass(this,${level+1})">`
+        ? `<td><select name="class" id="class${value}" onchange="updateFirstClass(this,${level+1})"><option>Choose a starting class</option>`
         : `<td><select name="class" id="class${value}" onchange="updateClass(this,${level+1})">`
     classOptions.forEach(c => myTable += `<option value="${c}">${c}</option>`);
     myTable += "</select></td>";
